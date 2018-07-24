@@ -3,12 +3,12 @@
 > file upload sample to amazone S3
 
 ## ref
-[jquery version]
-https://devcenter.heroku.com/articles/s3-upload-node
-[upload by axios]
-https://qiita.com/akameco/items/277abc7b56cde378f344
-[vue fileupload component]
-https://jsfiddle.net/meyubaraj/fLbe7r72/
+- [jquery version] 
+  https://devcenter.heroku.com/articles/s3-upload-node
+- [upload by axios]
+  https://qiita.com/akameco/items/277abc7b56cde378f344
+- [vue fileupload component]
+  https://jsfiddle.net/meyubaraj/fLbe7r72/
 
 ## Build Setup
 
