@@ -7,6 +7,15 @@ const nodeExternals = require('webpack-node-externals')
  */
 require("dotenv").config(); 
 
+//setBaseURL for Axios
+var env = process.env.NODE_ENV || 'development';
+if (env === 'development' || env === 'test') {
+  var API_URL='http://localhost:3000'
+}
+else{
+  var API_URL=process.env.API_URL
+}
+
 module.exports = {
   mode: 'universal',
   /**
@@ -64,6 +73,7 @@ module.exports = {
   */
   axios: {
     // See https://github.com/nuxt-community/axios-module#options
+    baseURL:API_URL
   },
 
   /*
