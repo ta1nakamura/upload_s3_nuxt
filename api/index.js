@@ -23,7 +23,6 @@ aws.config.region = 'ap-southeast-1';
  * Load the S3 information from the environment variables.
  */
 const S3_BUCKET = process.env.S3_BUCKET;
-console.log('--target S3_BUCKET:',S3_BUCKET)
 
 /*
  * Respond to GET requests to /sign-s3.

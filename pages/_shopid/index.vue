@@ -31,7 +31,8 @@
                 <!-- uploadedImage -->
                 <v-flex xs10 class="text-xs-center text-sm-center text-md-center text-lg-center">
                     <h1>uploaded images</h1>
-                    <img :src="img2src" alt="uploadedimage">
+                    <img v-for =" (item,index) in s3imageurls" :key="item.id"
+                        :src="item" :alt="index" style="{width:'100px'; height:100px;}">
                 </v-flex>
                 <!-- dialog -->
 				<v-dialog v-model="dialog" max-width="290">
@@ -60,7 +61,7 @@ export default {
             imageName: '',
             imageUrl: '',
             imageFile: '',
-            img2src:'', //test add
+            s3imageurls:[],
         }
     },
     validate ({ params }) {
@@ -68,7 +69,6 @@ export default {
         // return /^\d+$/.test(params.shopid)
         const shopids =['001','002']
         let result = shopids.includes(params.shopid)
-        console.log('--[shopid valid]--',result);
         return result;
     },
     methods: {
@@ -88,8 +88,6 @@ export default {
 				fr.addEventListener('load', () => {
 					this.imageUrl = fr.result
                     this.imageFile = files[0] // this is an image file that can be sent to server...
-                    // console.log('--ImageUrl--',this.imageUrl)
-                    // console.log('--ImageFile--',this.imageFile)
 				})
 			} else {
 				this.imageName = ''
@@ -98,19 +96,16 @@ export default {
 			}
         },
         onUpload(){
-            console.log('--onUpload--')
-            this.$store.dispatch('test');
-            
             if(this.imageFile == ''){
                 return;
             }
-            console.log('[this.imageFile]',this.imageFile)
-            this.$store.dispatch('uploadImage',this.imageFile)
+            this.$store.dispatch('uploadImage', { 
+                shopid: this.$route.params.shopid ,
+                imageFile: this.imageFile})
             .then(()=>{
                 setTimeout(()=>{
-                    console.log('-- auto showS3Image')
-                    this.img2src = this.$store.state.s3imageurl;
-                },1000)
+                    this.s3imageurls = this.$store.state.s3imageurls;
+                },3000)
             })
         },
     },
