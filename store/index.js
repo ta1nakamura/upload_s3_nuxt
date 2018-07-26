@@ -9,7 +9,7 @@ const createStore =()=>{
 
         },
         actions:{
-           async uploadImage(vuexContext,{shopid, imageFile}){
+           async uploadImage(vuexContext,{shopid, imageFile, s3filename}){
                console.log('--[$sore uploadImage]',imageFile)
                if(shopid == null){
                     console.log('-- [error]shopid is null')
@@ -19,13 +19,15 @@ const createStore =()=>{
                    //[Get /api/sign-s3]
                     const res = await  this.$axios.$get('/api/sign-s3',{
                         params:{
-                            'file-name':shopid+'/'+imageFile.name,
+                            // 'file-name':shopid+'/'+imageFile.name,
+                            'file-name':shopid+'/'+s3filename,
                             'file-type':imageFile.type
                         }});
-                    if(vuexContext.state.s3imageurls.includes(res.url)){
-                        console.log('--already upload--');
-                        return;
-                    }
+                    // if(vuexContext.state.s3imageurls.includes(res.url)){
+                    //     console.log('--already upload--');
+                    //     return;
+                    // }
+                    
                     //[Put file to s3 ]
                     const options = {headers: {'Content-Type': imageFile.type }};
                     const res2 = await this.$axios.$put( 
