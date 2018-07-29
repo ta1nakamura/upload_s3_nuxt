@@ -20,17 +20,7 @@
         </v-flex>
         <v-flex xs10 class="text-xs-center text-sm-center text-md-center text-lg-center">
             <h1>shop:{{$route.params.shopid}}</h1>
-            <!-- image -->
-            <img :src="imageUrl" height="150" v-if="imageUrl"/>
-            <v-text-field label="Select Image" @click='pickFile' v-model='imageName' prepend-icon='attach_file'></v-text-field>
-            <input
-                type="file"
-                style="display:none"
-                ref="image"
-                accept="image/*"
-                @change="onFilePicked">
-            
-            <v-layout row wrap justify-center>
+            <v-layout row wrap justify-center  align-center >
                 <v-flex xs3>
                     <!-- select image name -->
                     <v-select xs5 
@@ -38,8 +28,16 @@
                     outline lavel="image"></v-select>
                 </v-flex>
                 <v-flex xs3>
-                    <!-- upload button-->
-                    <v-btn color="secondary" @click="onUpload">upload</v-btn>
+                    <v-btn @click="pickFile" color="secondary" > img upload from file</v-btn>
+                    <!-- <v-text-field label="Select Image" @click='pickFile' 
+                    v-model='imageName' prepend-icon='attach_file'></v-text-field>
+                    -->
+                    <input
+                        type="file"
+                        style="display:none"
+                        ref="image"
+                        accept="image/*"
+                        @change="onFilePicked"> 
                 </v-flex>
             </v-layout>
             <v-divider></v-divider>
@@ -67,10 +65,7 @@
                             Southern Highlands of New South Wales, ...</div>
                         </div>
                     </v-card-title>
-                    <!-- <h2>{{item}}</h2>
-                    <img 
-                    :src="'https://n2-fileuploadtest.s3.amazonaws.com/'+$route.params.shopid+'/'+item" 
-                    :alt="index" style="{width:'100px'; height:100px;}"> -->
+                
                 </v-card></v-flex>
             </template>
             </v-layout>
@@ -102,7 +97,7 @@ export default {
             title: "Image Upload",
             dialog: false,
             imageName: '',
-            imageUrl: '',
+            // imageUrl: '',
             imageFile: '',
             // s3imageurls:[],
             s3imageNames:['avater_img','shop_img_01','shop_img_02','shop_img_03'],
@@ -128,35 +123,26 @@ export default {
 				if(this.imageName.lastIndexOf('.') <= 0) {
 					return
 				}
-				const fr = new FileReader ()
-				fr.readAsDataURL(files[0])
-				fr.addEventListener('load', () => {
-					this.imageUrl = fr.result
-                    this.imageFile = files[0] // this is an image file that can be sent to server...
-				})
+				// const fr = new FileReader ()
+				// fr.readAsDataURL(files[0])
+				// fr.addEventListener('load', () => {
+				// 	this.imageUrl = fr.result
+                //     this.imageFile = files[0] // this is an image file that can be sent to server...
+                
+                // [file upload] to S3
+                this.$store.dispatch('uploadImage', { 
+                    shopid: this.$route.params.shopid ,
+                    imageFile: files[0], 
+                    s3filename: this.selectedImagename, //filename from v-select
+                }).then(()=>{
+                    setTimeout(()=>{ this.$forceUpdate()}, 1000)
+                })
+				
 			} else {
 				this.imageName = ''
 				this.imageFile = ''
-				this.imageUrl = ''
+				
 			}
-        },
-        onUpload(){
-            if(this.imageFile == ''){
-                return;
-            }
-            //changename
-            
-            this.$store.dispatch('uploadImage', { 
-                shopid: this.$route.params.shopid ,
-                imageFile: this.imageFile, 
-                s3filename: this.selectedImagename, //filename from v-select
-            }).then(()=>{
-                setTimeout(()=>{
-                    // this.s3imageurls = this.$store.state.s3imageurls;
-                    // vue.$forceUpdate();
-                    this.$forceUpdate();
-                },3000)
-            })
         },
     },
 
